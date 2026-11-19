@@ -27,11 +27,16 @@ async function getEngine(model: string, onProgress?: (p: Progress) => void) {
   loading = (async () => {
     const { CreateWebWorkerMLCEngine } = await import('@mlc-ai/web-llm')
     const w = new Worker(new URL('../workers/llm.worker.ts', import.meta.url), { type: 'module' })
-    const e = await CreateWebWorkerMLCEngine(w, model, {
-      initProgressCallback: (r) => onProgress?.({ status: r.text, progress: r.progress * 100 }),
-    })
-    engine = e
-    return e
+    try {
+      const e = await CreateWebWorkerMLCEngine(w, model, {
+        initProgressCallback: (r) => onProgress?.({ status: r.text, progress: r.progress * 100 }),
+      })
+      engine = e
+      return e
+    } catch (error) {
+      w.terminate()
+      throw error
+    }
   })()
   loading.catch(() => {
     loading = null
@@ -41,6 +46,19 @@ async function getEngine(model: string, onProgress?: (p: Progress) => void) {
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+function isWorkgroupStorageLimitError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error)
+  return /maxComputeWorkgroupStorageSize/i.test(message) && /(exceeds limit|requested=)/i.test(message)
+}
+
+function wasmChat(messages: Msg[], maxTokens: number, temperature: number, opts: ChatOpts): Promise<string> {
+  const job = call<string>('generate', { model: WASM_LLM, messages, maxTokens, temperature }, (m) => {
+    if (m.type === 'token') opts.onToken?.(m.token as string)
+    else if (m.type === 'progress') opts.onProgress?.({ status: m.status as string, progress: m.progress as number, file: m.file as string })
+  })
+  return job.promise.then((result) => result.trim())
+}
 
 /** OpenAI-compatible streaming call (Groq / Gemini free tiers). Opt-in: sends text to the provider. */
 async function cloudChat(provider: 'groq' | 'gemini', messages: Msg[], opts: ChatOpts): Promise<string> {
@@ -105,7 +123,16 @@ export async function chat(messages: Msg[], opts: ChatOpts = {}): Promise<string
   if (llmProvider !== 'local') return cloudChat(llmProvider, messages, opts)
 
   if (hasWebGPU()) {
-    const e = await getEngine(useSettings.getState().llmModel, opts.onProgress)
+    let e: MLCEngineInterface
+    try {
+      e = await getEngine(useSettings.getState().llmModel, opts.onProgress)
+    } catch (error) {
+      if (!isWorkgroupStorageLimitError(error)) throw error
+      opts.onProgress?.({
+        status: 'WebGPU requires more compute workgroup storage than this device supports; falling back to WASM (slower).',
+      })
+      return wasmChat(messages, maxTokens, temperature, opts)
+    }
     const stream = await e.chat.completions.create({
       messages,
       max_tokens: maxTokens,
@@ -123,9 +150,5 @@ export async function chat(messages: Msg[], opts: ChatOpts = {}): Promise<string
     }
     return out.trim()
   }
-  const job = call<string>('generate', { model: WASM_LLM, messages, maxTokens, temperature }, (m) => {
-    if (m.type === 'token') opts.onToken?.(m.token as string)
-    else if (m.type === 'progress') opts.onProgress?.({ status: m.status as string, progress: m.progress as number, file: m.file as string })
-  })
-  return (await job.promise).trim()
+  return wasmChat(messages, maxTokens, temperature, opts)
 }

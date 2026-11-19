@@ -52,7 +52,7 @@ export const useSettings = create<Settings & { set: (p: Partial<Settings>) => vo
   persist(
     (set) => ({
       sttModel: STT_MODELS[1].id,
-      llmModel: LLM_MODELS[1].id,
+      llmModel: LLM_MODELS[0].id,
       uiLang: navigator.language.startsWith('vi') ? 'vi' : 'en',
       outputLang: 'vi',
       audioLang: 'auto',

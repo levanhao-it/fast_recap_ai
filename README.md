@@ -28,8 +28,9 @@ Cần HTTPS (hoặc localhost) để dùng mic và service worker.
 Trong **Cài đặt → Nguồn AI** có thể chọn Groq (Llama 3.3 70B) hoặc Google Gemini (2.5 Flash) bằng API key miễn phí của bạn. Khi bật, văn bản bản ghi được gửi tới nhà cung cấp đó (âm thanh thì không); mặc định vẫn là chạy trên thiết bị. Gói free có giới hạn tốc độ, app tự chờ và thử lại khi gặp lỗi 429.
 
 ## Mô hình & thiết bị
-- Chọn mô hình trong **Cài đặt**; mô hình tải một lần (Whisper 75–250MB, LLM 0.4–2GB) rồi cache offline. Nên dùng Wi‑Fi.
+- Chọn mô hình trong **Cài đặt**; mặc định dùng LLM 0.5B (~0.4GB) để giảm thời gian tải lần đầu. Các mô hình lớn hơn tải 1–2GB. Model được cache offline sau lần tải đầu; nên dùng Wi‑Fi.
 - WebGPU (Chrome/Edge Android & desktop) cho tốc độ tốt. Không có WebGPU → chạy WASM với mô hình nhỏ (chậm hơn, chất lượng thấp hơn).
+- Một số GPU giới hạn compute workgroup storage thấp hơn yêu cầu của WebGPU runtime; khi gặp lỗi này, ứng dụng tự chuyển sang WASM. WASM vẫn chạy trên thiết bị nhưng chậm hơn.
 - Runtime ONNX (wasm) được tải từ jsDelivr lần đầu rồi cache.
 - iOS: ghi âm có thể dừng khi tắt màn hình; app giữ màn hình sáng khi ghi.
 
