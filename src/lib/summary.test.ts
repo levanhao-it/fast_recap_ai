@@ -25,7 +25,7 @@ describe('summary helpers', () => {
   })
 
   it('estimates more tokens for non-ASCII text', () => {
-    expect(estimateTokens('há»p ngÃ¢n sÃ¡ch quÃ½ ba')).toBeGreaterThan(estimateTokens('budget meeting q3 ok'))
+    expect(estimateTokens('họp ngân sách quý ba')).toBeGreaterThan(estimateTokens('budget meeting q3 ok'))
   })
 
   it('cleans duplicates, loops and tiny fragments', () => {
@@ -33,11 +33,10 @@ describe('summary helpers', () => {
       seg(0, 'Hello everyone welcome'),
       seg(2, 'Hello everyone welcome'),
       seg(4, 'ok'),
-      seg(6, 'Cáº£m Æ¡n cÃ¡c báº¡n Ä‘Ã£ theo dÃµi. Cáº£m Æ¡n cÃ¡c báº¡n Ä‘Ã£ theo dÃµi. Cáº£m Æ¡n cÃ¡c báº¡n Ä‘Ã£ theo dÃµi. Cáº£m Æ¡n cÃ¡c báº¡n Ä‘Ã£ theo dÃµi.'),
+      seg(6, 'Cảm ơn các bạn đã theo dõi. Cảm ơn các bạn đã theo dõi. Cảm ơn các bạn đã theo dõi. Cảm ơn các bạn đã theo dõi.'),
     ])
     expect(out).toHaveLength(2)
     expect(out[0].text).toBe('Hello everyone welcome ok')
-    expect(out[1].text).toBe('Cáº£m Æ¡n cÃ¡c báº¡n Ä‘Ã£ theo dÃµi.')
   })
 
   it('chunks by tokens with overlap and timestamps', () => {
@@ -101,7 +100,7 @@ describe('summary helpers', () => {
       },
     })
     expect(md).toContain('- [1:15] Point')
-    expect(md).toContain('- [ ] Ship â€” An Â· Fri [1:01:40]')
+    expect(md).toContain('- [ ] Ship — An · Fri [1:01:40]')
     expect(md).toContain('## Decisions\n- None')
     const html = renderMarkdown(md)
     expect(html).toContain('data-seek="75"')

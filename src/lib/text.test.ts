@@ -20,7 +20,7 @@ describe('text utils', () => {
   })
 
   it('scores keywords incl. unicode', () => {
-    expect(keywordScore('ngÃ¢n sÃ¡ch quÃ½', 'Há»p vá» ngÃ¢n sÃ¡ch quÃ½ 3')).toBe(1)
+    expect(keywordScore('ngân sách quý', 'Họp về ngân sách quý 3')).toBe(1)
     expect(keywordScore('xyz', 'abc')).toBe(0)
   })
 

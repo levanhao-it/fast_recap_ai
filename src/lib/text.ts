@@ -67,7 +67,7 @@ export function parseSlides(md: string): Slide[] {
       slides.push(cur)
       continue
     }
-    const b = line.match(/^(?:[-*â€¢]|\d+[.)])\s+(.*)$/)
+    const b = line.match(/^(?:[-*•]|\d+[.)])\s+(.*)$/)
     if (b && cur) cur.bullets.push(b[1].trim())
     else if (cur && !b) cur.bullets.push(line)
   }
@@ -110,7 +110,7 @@ export function renderMarkdown(md: string): string {
   let inList = false
   md.split('\n').forEach((raw, idx) => {
     const line = raw.trim()
-    const li = line.match(/^(?:[-*â€¢]|\d+[.)])\s+(.*)$/)
+    const li = line.match(/^(?:[-*•]|\d+[.)])\s+(.*)$/)
     if (li) {
       if (!inList) html.push('<ul>')
       inList = true

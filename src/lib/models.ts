@@ -4,14 +4,14 @@ import type { Settings } from './types'
 
 export const STT_MODELS = [
   { id: 'onnx-community/whisper-tiny', label: 'Whisper Tiny (~75MB, nhanh)', mb: 75 },
-  { id: 'onnx-community/whisper-base', label: 'Whisper Base (~150MB, cÃ¢n báº±ng)', mb: 150 },
-  { id: 'onnx-community/whisper-small', label: 'Whisper Small (~250MB, chÃ­nh xÃ¡c)', mb: 250 },
+  { id: 'onnx-community/whisper-base', label: 'Whisper Base (~150MB, cân bằng)', mb: 150 },
+  { id: 'onnx-community/whisper-small', label: 'Whisper Small (~250MB, chính xác)', mb: 250 },
 ]
 
 export const LLM_MODELS = [
   { id: 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC', label: 'Qwen2.5 0.5B (~0.4GB, nhanh)', mb: 400 },
-  { id: 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC', label: 'Qwen2.5 1.5B (~1GB, cÃ¢n báº±ng)', mb: 1000 },
-  { id: 'Qwen2.5-3B-Instruct-q4f16_1-MLC', label: 'Qwen2.5 3B (~2GB, chÃ­nh xÃ¡c)', mb: 2000 },
+  { id: 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC', label: 'Qwen2.5 1.5B (~1GB, cân bằng)', mb: 1000 },
+  { id: 'Qwen2.5-3B-Instruct-q4f16_1-MLC', label: 'Qwen2.5 3B (~2GB, chính xác)', mb: 2000 },
 ]
 
 // Used when WebGPU is unavailable (runs through Transformers.js on WASM)
