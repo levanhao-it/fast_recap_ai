@@ -44,7 +44,7 @@ export default function Home() {
         <div className="flex flex-wrap gap-2 text-xs">
           {folders.map((f) => (
             <button key={f} className={`rounded-full border px-3 py-1 ${folder === f ? 'bg-indigo-600 text-white' : ''}`} onClick={() => setFolder(folder === f ? '' : f)}>
-              ðŸ“ {f}
+              📁 {f}
             </button>
           ))}
           {tags.map((x) => (
@@ -66,7 +66,7 @@ export default function Home() {
           </p>
           <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-500">
             <span>{new Date(r.createdAt).toLocaleDateString()}</span>
-            {r.folder && <span>ðŸ“ {r.folder}</span>}
+            {r.folder && <span>📁 {r.folder}</span>}
             {r.tags.map((x) => (
               <span key={x}>#{x}</span>
             ))}

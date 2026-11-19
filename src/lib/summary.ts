@@ -37,22 +37,22 @@ interface Template {
 export const TEMPLATES: Record<TemplateId, Template> = {
   meeting: {
     focus: 'a business meeting: key points discussed, decisions made, and action items (who does what by when)',
-    vi: { summary: 'TÃ³m táº¯t', points: 'Ã chÃ­nh', decisions: 'Quyáº¿t Ä‘á»‹nh', actions: 'Viá»‡c cáº§n lÃ m', insights: 'Nháº­n Ä‘á»‹nh', none: 'KhÃ´ng cÃ³' },
+    vi: { summary: 'Tóm tắt', points: 'Ý chính', decisions: 'Quyết định', actions: 'Việc cần làm', insights: 'Nhận định', none: 'Không có' },
     en: { summary: 'Summary', points: 'Key points', decisions: 'Decisions', actions: 'Action items', insights: 'Insights', none: 'None' },
   },
   lecture: {
     focus: 'a lecture: key concepts (points), definitions and examples (decisions), and things to study or follow up (actions)',
-    vi: { summary: 'TÃ³m táº¯t', points: 'KhÃ¡i niá»‡m chÃ­nh', decisions: 'Äá»‹nh nghÄ©a & vÃ­ dá»¥', actions: 'Cáº§n Ã´n táº­p', insights: 'Nháº­n Ä‘á»‹nh', none: 'KhÃ´ng cÃ³' },
+    vi: { summary: 'Tóm tắt', points: 'Khái niệm chính', decisions: 'Định nghĩa & ví dụ', actions: 'Cần ôn tập', insights: 'Nhận định', none: 'Không có' },
     en: { summary: 'Summary', points: 'Key concepts', decisions: 'Definitions & examples', actions: 'To study', insights: 'Insights', none: 'None' },
   },
   interview: {
     focus: 'an interview: main answers and topics (points), notable quotes (decisions), and follow-ups (actions)',
-    vi: { summary: 'TÃ³m táº¯t', points: 'Chá»§ Ä‘á» & cÃ¢u tráº£ lá»i', decisions: 'TrÃ­ch dáº«n Ä‘Ã¡ng chÃº Ã½', actions: 'Cáº§n theo dÃµi', insights: 'Nháº­n Ä‘á»‹nh', none: 'KhÃ´ng cÃ³' },
+    vi: { summary: 'Tóm tắt', points: 'Chủ đề & câu trả lời', decisions: 'Trích dẫn đáng chú ý', actions: 'Cần theo dõi', insights: 'Nhận định', none: 'Không có' },
     en: { summary: 'Summary', points: 'Topics & answers', decisions: 'Notable quotes', actions: 'Follow-ups', insights: 'Insights', none: 'None' },
   },
   memo: {
     focus: 'a personal voice memo: ideas (points), decisions, and to-dos (actions)',
-    vi: { summary: 'TÃ³m táº¯t', points: 'Ã tÆ°á»Ÿng', decisions: 'Quyáº¿t Ä‘á»‹nh', actions: 'Viá»‡c cáº§n lÃ m', insights: 'Nháº­n Ä‘á»‹nh', none: 'KhÃ´ng cÃ³' },
+    vi: { summary: 'Tóm tắt', points: 'Ý tưởng', decisions: 'Quyết định', actions: 'Việc cần làm', insights: 'Nhận định', none: 'Không có' },
     en: { summary: 'Summary', points: 'Ideas', decisions: 'Decisions', actions: 'To-dos', insights: 'Insights', none: 'None' },
   },
 }
@@ -168,7 +168,7 @@ export function normalizeExtraction(raw: unknown, fallbackT: number): Extraction
     const a = v as Record<string, unknown>
     const task = str(a.task ?? a.text ?? a.action)
     if (!task) return []
-    const clean = (x: string) => (/^(none|n\/a|null|unknown|khÃ´ng|-)$/i.test(x) ? '' : x)
+    const clean = (x: string) => (/^(none|n\/a|null|unknown|không|-)$/i.test(x) ? '' : x)
     return [{ task, owner: clean(str(a.owner ?? a.who)), deadline: clean(str(a.deadline ?? a.due)), t: parseTime(a.time ?? a.t) ?? fallbackT }]
   })
   return { points: items(o.points), decisions: items(o.decisions), actions }
