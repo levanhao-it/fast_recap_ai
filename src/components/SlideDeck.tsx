@@ -40,16 +40,16 @@ export default function SlideDeck({ markdown }: { markdown: string }) {
   const nav = (
     <div className="mt-2 flex items-center justify-between gap-2 print:hidden">
       <button className="btn-ghost" disabled={idx === 0} onClick={() => setI(idx - 1)}>
-        â€¹
+        ‹
       </button>
       <span className="text-sm">
         {idx + 1} / {n}
       </span>
       <button className="btn-ghost" disabled={idx >= n - 1} onClick={() => setI(idx + 1)}>
-        â€º
+        ›
       </button>
       <button className="btn-ghost" onClick={() => setFull((f) => !f)}>
-        â›¶
+        ⛶
       </button>
     </div>
   )

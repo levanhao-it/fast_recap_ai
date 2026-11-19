@@ -30,15 +30,15 @@ export const CLOUD = {
 
 export const LANGS = [
   ['auto', 'Auto'],
-  ['vi', 'Tiáº¿ng Viá»‡t'],
+  ['vi', 'Tiếng Việt'],
   ['en', 'English'],
-  ['zh', 'ä¸­æ–‡'],
-  ['ja', 'æ—¥æœ¬èªž'],
-  ['ko', 'í•œêµ­ì–´'],
-  ['fr', 'FranÃ§ais'],
-  ['es', 'EspaÃ±ol'],
+  ['zh', '中文'],
+  ['ja', '日本語'],
+  ['ko', '한국어'],
+  ['fr', 'Français'],
+  ['es', 'Español'],
   ['de', 'Deutsch'],
-  ['th', 'à¹„à¸—à¸¢'],
+  ['th', 'ภาษาไทย'],
   ['id', 'Bahasa Indonesia'],
 ] as const
 

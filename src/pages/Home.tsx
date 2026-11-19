@@ -36,7 +36,7 @@ export default function Home() {
       <div className="flex gap-2">
         <input className="input" type="search" placeholder={t('search')} value={q} onChange={(e) => setQ(e.target.value)} />
         <button className="btn-ghost shrink-0" onClick={() => file.current?.click()}>
-          â¬†
+          ⬆
         </button>
         <input ref={file} type="file" accept="audio/*,video/*" hidden onChange={(e) => void onImport(e.target.files?.[0])} />
       </div>
@@ -62,7 +62,7 @@ export default function Home() {
             <span className="shrink-0 text-xs text-slate-500">{r.duration ? formatTime(r.duration) : ''}</span>
           </div>
           <p className="mt-1 line-clamp-2 text-sm text-slate-600 dark:text-slate-300">
-            {r.status === 'transcribing' ? 'â³ â€¦' : r.summary.replace(/^#+\s.*$/gm, '').replace(/\[(?:\d+:)?\d{1,2}:\d{2}\]|\[[ xX]\]|[-*]\s/g, '').trim() || r.segments[0]?.text || ''}
+            {r.status === 'transcribing' ? '⏳ …' : r.summary.replace(/^#+\s.*$/gm, '').replace(/\[(?:\d+:)?\d{1,2}:\d{2}\]|\[[ xX]\]|[-*]\s/g, '').trim() || r.segments[0]?.text || ''}
           </p>
           <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-500">
             <span>{new Date(r.createdAt).toLocaleDateString()}</span>

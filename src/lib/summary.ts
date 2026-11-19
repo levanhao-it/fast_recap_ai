@@ -211,8 +211,8 @@ export function composeSummary(opts: {
   const items = (xs: Item[]) => list(xs.map((x) => `- ${ts(x.t)} ${x.text}`))
   const actions = list(
     data.actions.map((a) => {
-      const meta = [a.owner, a.deadline].filter(Boolean).join(' Â· ')
-      return `- [ ] ${a.task}${meta ? ` â€” ${meta}` : ''} ${ts(a.t)}`
+      const meta = [a.owner, a.deadline].filter(Boolean).join(' · ')
+      return `- [ ] ${a.task}${meta ? ` — ${meta}` : ''} ${ts(a.t)}`
     }),
   )
   return [

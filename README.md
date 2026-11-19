@@ -1,41 +1,43 @@
+
+
 # Fast Recap AI
 
-PWA miá»…n phÃ­: ghi Ã¢m â†’ transcript â†’ tÃ³m táº¯t â†’ há»i Ä‘Ã¡p â†’ slide â†’ mind map â†’ ghi chÃº. AI cháº¡y **hoÃ n toÃ n trÃªn thiáº¿t bá»‹** (Whisper + LLM qua WebGPU/WASM), khÃ´ng cáº§n API key hay tráº£ phÃ­.
+PWA miễn phí: ghi âm → transcript → tóm tắt → hỏi đáp → slide → mind map → ghi chú. AI chạy **hoàn toàn trên thiết bị** (Whisper + LLM qua WebGPU/WASM), không cần API key hay trả phí.
 
-## Cháº¡y
+## Chạy
 ```
 npm install
-npm run dev        # phÃ¡t triá»ƒn
+npm run dev        # phát triển
 npm test           # unit test
-npm run build      # build PWA vÃ o dist/
+npm run build      # build PWA vào dist/
 ```
-Cáº§n HTTPS (hoáº·c localhost) Ä‘á»ƒ dÃ¹ng micro vÃ  service worker.
+Cần HTTPS (hoặc localhost) để dùng mic và service worker.
 
-## TÃ­nh nÄƒng
-| TÃ­nh nÄƒng | CÃ¡ch lÃ m |
+## Tính năng
+| Tính năng | Cách làm |
 |---|---|
-| Record & Transcribe | MediaRecorder + Whisper (Transformers.js, worker); nháº­p file Ã¢m thanh; sá»­a transcript, báº¥m má»‘c thá»i gian Ä‘á»ƒ nghe láº¡i |
-| AI Summaries | LÃ m sáº¡ch transcript â†’ chia chunk theo token (cÃ³ chá»“ng láº¥p) â†’ trÃ­ch xuáº¥t JSON cÃ³ rÃ ng buá»™c schema cho tá»«ng chunk â†’ gá»™p & loáº¡i trÃ¹ng â†’ viáº¿t pháº§n tÃ³m táº¯t tá»« cÃ¡c Ã½ Ä‘Ã£ trÃ­ch. Má»—i Ã½ kÃ¨m má»‘c thá»i gian (báº¥m Ä‘á»ƒ nghe láº¡i), viá»‡c cáº§n lÃ m cÃ³ owner/háº¡n vÃ  tick hoÃ n thÃ nh Ä‘Æ°á»£c. CÃ³ máº«u theo loáº¡i ná»™i dung (há»p, bÃ i giáº£ng, phá»ng váº¥n, ghi chÃº giá»ng nÃ³i), tá»± tÃ³m táº¯t sau khi transcribe (tuá»³ chá»n), sá»­a/sao chÃ©p káº¿t quáº£ |
-| Smart Q&A | Embedding `multilingual-e5-small` + truy xuáº¥t top-k, tráº£ lá»i kÃ¨m má»‘c thá»i gian nguá»“n |
-| Auto Slides | LLM â†’ Markdown â†’ bá»™ slide (trÃ¬nh chiáº¿u toÃ n mÃ n hÃ¬nh), xuáº¥t PPTX / PDF (in) |
-| Mind Map | LLM â†’ Markdown â†’ markmap tÆ°Æ¡ng tÃ¡c, xuáº¥t SVG |
-| Organized Notes | IndexedDB (Dexie), thÆ° má»¥c/tháº», tÃ¬m kiáº¿m toÃ n vÄƒn khÃ´ng dáº¥u, xuáº¥t Markdown |
-| Äá»“ng bá»™ & chia sáº» | Supabase free (tuá»³ chá»n), chá»‰ Ä‘á»“ng bá»™ vÄƒn báº£n; link chia sáº» chá»‰ Ä‘á»c |
+| Record & Transcribe | MediaRecorder + Whisper (Transformers.js, worker); nhập file âm thanh; sửa transcript, bấm mốc thời gian để nghe lại |
+| AI Summaries | Làm sạch transcript → chia chunk theo token (có chồng lấp) → trích xuất JSON có ràng buộc schema cho từng chunk → gộp & loại trùng → viết phần tóm tắt từ các ý đã trích. Mỗi ý kèm mốc thời gian (bấm để nghe lại), việc cần làm có owner/hạn và tick hoàn thành được. Có mẫu theo loại nội dung (họp, bài giảng, phỏng vấn, ghi chú giọng nói), tự tóm tắt sau khi transcribe (tùy chọn), sửa/sao chép kết quả |
+| Smart Q&A | Embedding `multilingual-e5-small` + truy xuất top-k, trả lời kèm mốc thời gian nguồn |
+| Auto Slides | LLM → Markdown → bộ slide (trình chiếu toàn màn hình), xuất PPTX / PDF (in) |
+| Mind Map | LLM → Markdown → markmap tương tác, xuất SVG |
+| Organized Notes | IndexedDB (Dexie), thư mục/thẻ, tìm kiếm toàn văn không dấu, xuất Markdown |
+| Đồng bộ & chia sẻ | Supabase free (tùy chọn), chỉ đồng bộ văn bản; link chia sẻ chỉ đọc |
 
-## AI miá»…n phÃ­ tuá»³ chá»n (cháº¥t lÆ°á»£ng cao hÆ¡n)
-Trong **CÃ i Ä‘áº·t â†’ Nguá»“n AI** cÃ³ thá»ƒ chá»n Groq (Llama 3.3 70B) hoáº·c Google Gemini (2.5 Flash) báº±ng API key miá»…n phÃ­ cá»§a báº¡n. Khi báº­t, vÄƒn báº£n báº£n ghi Ä‘Æ°á»£c gá»­i tá»›i nhÃ  cung cáº¥p Ä‘Ã³ (Ã¢m thanh thÃ¬ khÃ´ng); máº·c Ä‘á»‹nh váº«n lÃ  cháº¡y trÃªn thiáº¿t bá»‹. GÃ³i free cÃ³ giá»›i háº¡n tá»‘c Ä‘á»™, app tá»± chá» vÃ  thá»­ láº¡i khi gáº·p lá»—i 429.
+## AI miễn phí tùy chọn (chất lượng cao hơn)
+Trong **Cài đặt → Nguồn AI** có thể chọn Groq (Llama 3.3 70B) hoặc Google Gemini (2.5 Flash) bằng API key miễn phí của bạn. Khi bật, văn bản bản ghi được gửi tới nhà cung cấp đó (âm thanh thì không); mặc định vẫn là chạy trên thiết bị. Gói free có giới hạn tốc độ, app tự chờ và thử lại khi gặp lỗi 429.
 
-## MÃ´ hÃ¬nh & thiáº¿t bá»‹
-- Chá»n mÃ´ hÃ¬nh trong **CÃ i Ä‘áº·t**; mÃ´ hÃ¬nh táº£i má»™t láº§n (Whisper 75â€“250MB, LLM 0.4â€“2GB) rá»“i cache offline. NÃªn dÃ¹ng Wiâ€‘Fi.
-- WebGPU (Chrome/Edge Android & desktop) cho tá»‘c Ä‘á»™ tá»‘t. KhÃ´ng cÃ³ WebGPU â†’ cháº¡y WASM vá»›i mÃ´ hÃ¬nh nhá» (cháº­m hÆ¡n, cháº¥t lÆ°á»£ng tháº¥p hÆ¡n).
-- Runtime ONNX (wasm) Ä‘Æ°á»£c táº£i tá»« jsDelivr láº§n Ä‘áº§u rá»“i cache.
-- iOS: ghi Ã¢m cÃ³ thá»ƒ dá»«ng khi táº¯t mÃ n hÃ¬nh; app giá»¯ mÃ n hÃ¬nh sÃ¡ng khi ghi.
+## Mô hình & thiết bị
+- Chọn mô hình trong **Cài đặt**; mô hình tải một lần (Whisper 75–250MB, LLM 0.4–2GB) rồi cache offline. Nên dùng Wi‑Fi.
+- WebGPU (Chrome/Edge Android & desktop) cho tốc độ tốt. Không có WebGPU → chạy WASM với mô hình nhỏ (chậm hơn, chất lượng thấp hơn).
+- Runtime ONNX (wasm) được tải từ jsDelivr lần đầu rồi cache.
+- iOS: ghi âm có thể dừng khi tắt màn hình; app giữ màn hình sáng khi ghi.
 
-## Supabase (miá»…n phÃ­, tuá»³ chá»n)
-1. Táº¡o project táº¡i supabase.com, cháº¡y [supabase/schema.sql](supabase/schema.sql) trong SQL editor.
-2. Nháº­p URL + anon key trong CÃ i Ä‘áº·t (hoáº·c `.env`: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`), Ä‘Äƒng kÃ½/Ä‘Äƒng nháº­p, báº¥m **Äá»“ng bá»™ ngay**.
-3. NÃºt **Chia sáº»** trong ghi chÃº táº¡o link `/s/<token>` (báº¥t ká»³ ai cÃ³ link Ä‘á»u xem Ä‘Æ°á»£c).
-Ã‚m thanh khÃ´ng bao giá» Ä‘Æ°á»£c táº£i lÃªn.
+## Supabase (miễn phí, tùy chọn)
+1. Tạo project tại supabase.com, chạy [supabase/schema.sql](supabase/schema.sql) trong SQL editor.
+2. Nhập URL + anon key trong Cài đặt (hoặc `.env`: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`), đăng ký/đăng nhập, bấm **Đồng bộ ngay**.
+3. Nút **Chia sẻ** trong ghi chú tạo link `/s/<token>` (bất kỳ ai có link đều xem được).
+Âm thanh không bao giờ được tải lên.
 
-## Deploy miá»…n phÃ­ (Cloudflare Pages)
-Build command `npm run build`, output `dist`. `public/_redirects` Ä‘Ã£ xá»­ lÃ½ SPA routing. Icon táº¡o báº±ng `node scripts/make-icons.mjs`.
+## Deploy miễn phí (Cloudflare Pages)
+Build command `npm run build`, output `dist`. `public/_redirects` đã xử lý SPA routing. Icon tạo bằng `node scripts/make-icons.mjs`.

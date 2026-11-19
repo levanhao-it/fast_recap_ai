@@ -40,7 +40,7 @@ export default function Settings() {
   const sync = async () => {
     try {
       const r = await syncNow()
-      setMsg(`${t('syncDone')}: â†‘${r.pushed} â†“${r.pulled}`)
+      setMsg(`${t('syncDone')}: ↑${r.pushed} ↓${r.pulled}`)
     } catch (e) {
       setMsg(e instanceof Error ? e.message : t('errorGeneric'))
     }
@@ -51,7 +51,7 @@ export default function Settings() {
       <div className="card space-y-3">
         <Field label={t('uiLang')}>
           <select className="input" value={s.uiLang} onChange={(e) => s.set({ uiLang: e.target.value as 'vi' | 'en' })}>
-            <option value="vi">Tiáº¿ng Viá»‡t</option>
+            <option value="vi">Tiếng Việt</option>
             <option value="en">English</option>
           </select>
         </Field>

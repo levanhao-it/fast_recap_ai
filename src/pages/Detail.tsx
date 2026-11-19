@@ -82,7 +82,7 @@ export default function Detail() {
     <div className="space-y-3">
       <div className="flex items-center gap-2">
         <button className="btn-ghost" onClick={() => nav('/')} aria-label={t('back')}>
-          â€¹
+          ‹
         </button>
         <input className="input font-medium" aria-label={t('titleLabel')} defaultValue={rec.title} key={rec.title} onBlur={(e) => e.target.value !== rec.title && patch({ title: e.target.value })} />
       </div>

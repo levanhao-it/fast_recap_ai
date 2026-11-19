@@ -2,7 +2,7 @@ import type { Progress } from '../lib/ml'
 
 export default function ProgressBar({ label, value, p }: { label?: string; value?: number; p?: Progress }) {
   const v = p?.progress ?? value
-  const text = [label, p?.file?.split('/').pop() ?? p?.status].filter(Boolean).join(' Â· ')
+  const text = [label, p?.file?.split('/').pop() ?? p?.status].filter(Boolean).join(' · ')
   return (
     <div className="my-2 text-xs text-slate-600 dark:text-slate-300">
       <div className="mb-1 truncate">{text}</div>

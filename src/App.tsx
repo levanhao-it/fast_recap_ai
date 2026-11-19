@@ -12,13 +12,13 @@ function Nav() {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] dark:border-slate-700 dark:bg-slate-800 print:hidden">
       <NavLink to="/" end className={cls}>
-        ðŸ“ {t('notes')}
+        📝 {t('notes')}
       </NavLink>
       <NavLink to="/record" className={cls}>
-        ðŸŽ™ {t('record')}
+        🎙️ {t('record')}
       </NavLink>
       <NavLink to="/settings" className={cls}>
-        âš™ {t('settings')}
+        ⚙️ {t('settings')}
       </NavLink>
     </nav>
   )

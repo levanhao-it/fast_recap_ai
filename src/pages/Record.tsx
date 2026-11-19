@@ -124,21 +124,21 @@ export default function Record() {
       </div>
       {state === 'idle' ? (
         <button className="grid h-24 w-24 place-items-center rounded-full bg-red-600 text-white shadow-lg active:scale-95" onClick={start} aria-label={t('start')}>
-          â—
+          ●
         </button>
       ) : (
         <div className="flex gap-3">
           {state === 'recording' ? (
             <button className="btn-ghost" onClick={pause}>
-              â¸ {t('pause')}
+              ⏸ {t('pause')}
             </button>
           ) : (
             <button className="btn-ghost" onClick={resume}>
-              â–¶ {t('resume')}
+              ▶ {t('resume')}
             </button>
           )}
           <button className="btn bg-red-600" onClick={stop}>
-            â–  {t('stop')}
+            ■ {t('stop')}
           </button>
         </div>
       )}
