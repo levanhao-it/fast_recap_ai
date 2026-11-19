@@ -19,6 +19,9 @@ export interface ChatOpts {
 let engine: MLCEngineInterface | null = null
 let engineModel = ''
 let loading: Promise<MLCEngineInterface> | null = null
+let webgpuDisabled = false
+let webgpuStorageSupported: Promise<boolean> | null = null
+const REQUIRED_WORKGROUP_STORAGE_SIZE = 32768
 
 async function getEngine(model: string, onProgress?: (p: Progress) => void) {
   if (engine && engineModel === model) return engine
@@ -48,8 +51,31 @@ async function getEngine(model: string, onProgress?: (p: Progress) => void) {
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 function isWorkgroupStorageLimitError(error: unknown): boolean {
-  const message = error instanceof Error ? error.message : String(error)
-  return /maxComputeWorkgroupStorageSize/i.test(message) && /(exceeds limit|requested=)/i.test(message)
+  const message =
+    error instanceof Error
+      ? error.message
+      : error && typeof error === 'object' && 'message' in error
+        ? String(error.message)
+        : String(error)
+  return /maxComputeWorkgroupStorageSize/i.test(message)
+}
+
+async function canRunWebGPU(): Promise<boolean> {
+  if (webgpuDisabled || !hasWebGPU()) return false
+  if (!webgpuStorageSupported) {
+    webgpuStorageSupported = navigator.gpu
+      .requestAdapter()
+      .then((adapter) => {
+        const supported = (adapter?.limits.maxComputeWorkgroupStorageSize ?? 0) >= REQUIRED_WORKGROUP_STORAGE_SIZE
+        if (!supported) webgpuDisabled = true
+        return supported
+      })
+      .catch((error: unknown) => {
+        webgpuStorageSupported = null
+        throw error
+      })
+  }
+  return webgpuStorageSupported
 }
 
 function wasmChat(messages: Msg[], maxTokens: number, temperature: number, opts: ChatOpts): Promise<string> {
@@ -58,6 +84,19 @@ function wasmChat(messages: Msg[], maxTokens: number, temperature: number, opts:
     else if (m.type === 'progress') opts.onProgress?.({ status: m.status as string, progress: m.progress as number, file: m.file as string })
   })
   return job.promise.then((result) => result.trim())
+}
+
+function workgroupFallbackStatus(): string {
+  return useSettings.getState().uiLang === 'vi'
+    ? 'GPU không đủ bộ nhớ xử lý cho WebGPU; đang chuyển sang WASM (chậm hơn).'
+    : 'GPU does not provide enough workgroup storage for WebGPU; falling back to WASM (slower).'
+}
+
+function disableWebGPU(): void {
+  webgpuDisabled = true
+  engine = null
+  engineModel = ''
+  loading = null
 }
 
 /** OpenAI-compatible streaming call (Groq / Gemini free tiers). Opt-in: sends text to the provider. */
@@ -122,33 +161,32 @@ export async function chat(messages: Msg[], opts: ChatOpts = {}): Promise<string
   const { llmProvider } = useSettings.getState()
   if (llmProvider !== 'local') return cloudChat(llmProvider, messages, opts)
 
-  if (hasWebGPU()) {
-    let e: MLCEngineInterface
+  if (await canRunWebGPU()) {
     try {
-      e = await getEngine(useSettings.getState().llmModel, opts.onProgress)
+      const e = await getEngine(useSettings.getState().llmModel, opts.onProgress)
+      const stream = await e.chat.completions.create({
+        messages,
+        max_tokens: maxTokens,
+        temperature,
+        stream: true,
+        ...(schema ? { response_format: { type: 'json_object' as const, schema: JSON.stringify(schema) } } : {}),
+      })
+      let out = ''
+      for await (const part of stream) {
+        const t = part.choices[0]?.delta?.content ?? ''
+        if (t) {
+          out += t
+          opts.onToken?.(t)
+        }
+      }
+      return out.trim()
     } catch (error) {
       if (!isWorkgroupStorageLimitError(error)) throw error
-      opts.onProgress?.({
-        status: 'WebGPU requires more compute workgroup storage than this device supports; falling back to WASM (slower).',
-      })
+      disableWebGPU()
+      opts.onProgress?.({ status: workgroupFallbackStatus() })
       return wasmChat(messages, maxTokens, temperature, opts)
     }
-    const stream = await e.chat.completions.create({
-      messages,
-      max_tokens: maxTokens,
-      temperature,
-      stream: true,
-      ...(schema ? { response_format: { type: 'json_object' as const, schema: JSON.stringify(schema) } } : {}),
-    })
-    let out = ''
-    for await (const part of stream) {
-      const t = part.choices[0]?.delta?.content ?? ''
-      if (t) {
-        out += t
-        opts.onToken?.(t)
-      }
-    }
-    return out.trim()
   }
+  if (webgpuDisabled) opts.onProgress?.({ status: workgroupFallbackStatus() })
   return wasmChat(messages, maxTokens, temperature, opts)
 }
